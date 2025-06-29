@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
 
-#!/usr/bin/env python3
-
 import argparse
-from meadowlark import Meadow
+import  meadowlark as lark
 
 def main():
     parser = argparse.ArgumentParser(description="Print Meadow metadata")
@@ -11,10 +9,16 @@ def main():
     args = parser.parse_args()
 
     try:
-        meadow = Meadow.open(args.burrow)
+        meadow = lark.Meadow.open(args.burrow)
         with meadow:
-            print("Name:", meadow.name())
-            print("Recipe:", meadow.recipe())
+            hopper = meadow.hopper("hello world")
+            k = 0
+            while True:
+                p, q, _ = hopper.tau(k)
+                if p == lark.maxfinity:
+                    break
+                print(p, q)
+                k = p + 1
     except RuntimeError as e:
         print(e)
 
