@@ -1,0 +1,14 @@
+[build-system]
+requires = ["scikit-build-core", "pybind11", "cmake"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "meadowlark"
+version = "0.1.0"
+description = "Python bindings for Cottontail search engine"
+authors = [{name = "Charlie Clarke", email = "claclark@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.9"
+
+[tool.scikit-build]
+wheel.packages = ["meadowlark"]
