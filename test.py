@@ -3,6 +3,9 @@
 import argparse
 import  meadowlark as lark
 
+def sanitize(s: str) -> str:
+    return s.replace("\n", " ")
+
 def main():
     parser = argparse.ArgumentParser(description="Test Meadowlark")
     parser.add_argument("--burrow", required=True, help="Path to the burrow")
@@ -11,8 +14,8 @@ def main():
     try:
         meadow = lark.Meadow.open(args.burrow)
         with meadow:
-            for p, q, _ in meadow.hopper("hello world"):
-                print(p, q)
+            for p, q, _ in meadow.hopper("\"to be or not to be\""):
+                print(p, q, sanitize(meadow.translate(p,q)))
     except RuntimeError as e:
         print(e)
 

@@ -24,6 +24,8 @@ PYBIND11_MODULE(_meadowlark, m) {
   m.doc() = "Meadowlark: Python wrapper for Cottontail annotative indexing";
   m.attr("maxfinity") = pybind11::int_(cottontail::maxfinity);
   m.attr("minfinity") = pybind11::int_(cottontail::minfinity);
+  m.def("fval2int", &cottontail::fval2addr, pybind11::arg("v"),
+        "Decode an floating feature value into an integer feature value");
   pybind11::class_<HopperIter>(m, "HopperIter")
       .def("__iter__", [](HopperIter &self) -> HopperIter & { return self; })
       .def("__next__", &HopperIter::next);
@@ -81,13 +83,19 @@ PYBIND11_MODULE(_meadowlark, m) {
       .def("__exit__",
            [](std::shared_ptr<cottontail::Warren> self, pybind11::handle,
               pybind11::handle, pybind11::handle) { self->end(); })
-      .def("hopper", [](std::shared_ptr<cottontail::Warren> self,
-                        const std::string &gcl) {
-        std::string error;
-        std::unique_ptr<cottontail::Hopper> hopper =
-            self->hopper_from_gcl(gcl, &error);
-        if (!hopper)
-          throw std::runtime_error(error);
-        return hopper;
-      });
+      .def(
+          "hopper",
+          [](std::shared_ptr<cottontail::Warren> self, const std::string &gcl) {
+            std::string error;
+            std::unique_ptr<cottontail::Hopper> hopper =
+                self->hopper_from_gcl(gcl, &error);
+            if (!hopper)
+              throw std::runtime_error(error);
+            return hopper;
+          })
+      .def(
+          "translate",
+          [](std::shared_ptr<cottontail::Warren> self, cottontail::addr p,
+             cottontail::addr q) { return self->txt()->translate(p, q); },
+          pybind11::arg("p"), pybind11::arg("q"));
 }
