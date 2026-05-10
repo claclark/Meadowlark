@@ -18,6 +18,24 @@
   `pyproject.toml` uses `scikit-build-core`;
   `CMakeLists.txt` links against the sibling `../Cottontail` checkout and its
   Bazel build output.
+- Known-good local Python build environment:
+  activate the `meadow` conda environment, which currently uses CPython 3.9;
+  build `../Cottontail` first so
+  `../Cottontail/bazel-bin/src/libcottontail.so` exists;
+  install `scikit-build-core`, `pybind11`, and `cmake` in the environment;
+  rebuild from this repo with `make`, whose default target is `building`.
+- Local Makefile targets:
+  `make deps` installs Python build tools;
+  `make cottontail` runs Cottontail's debug build in `../Cottontail`;
+  `make` or `make building` rebuilds the pybind11 extension in place;
+  `make checking` runs import and ldd smoke checks.
+- Local rebuild caveat:
+  pip may fail at the final editable-install metadata step if user
+  site-packages is read-only, but the extension can still have rebuilt in place
+  at `meadowlark/_meadowlark.cpython-39-x86_64-linux-gnu.so`.
+- Local smoke checks:
+  `python -c "import meadowlark as lark; print(lark.maxfinity)"` and
+  `ldd meadowlark/_meadowlark*.so`.
 - Local helper scripts:
   `test.py` is a small smoke test and `browse.py` is an interactive query
   shell.
@@ -36,3 +54,7 @@
   improve local build/test, wrap new functionality, package/publish, repeat.
 - Packaging for PyPI is intentionally deferred until the local workflow is in
   better shape.
+- User shutdown phrase:
+  when the user says "Get ready to shut down", prepare notes for future work,
+  including concise updates to `ai/notes.md` and `ai/log.md` as appropriate,
+  and suggest a commit message, but do not run any git commands.
